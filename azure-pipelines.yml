@@ -31,6 +31,7 @@ stages:
         set -ex
         pip3 install setuptools
         python3 setup.py bdist_wheel
+        sudo py.test -v --force-flaky --junitxml=tr.xml
         mkdir -p target/python-wheels/
     - publish: $(System.DefaultWorkingDirectory)
       artifact: swsssdk
