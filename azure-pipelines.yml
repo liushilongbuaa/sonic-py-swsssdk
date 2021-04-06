@@ -29,7 +29,8 @@ stages:
       displayName: 'Checkout code'
     - script: |
         set -ex
-        pip3 install setuptools
+        # install packages for vs test
+        sudo pip3 install pytest==4.6.2 attrs==19.1.0 exabgp==4.0.10 distro==1.5.0 docker==4.4.1 redis==3.3.4 flaky==3.7.0 setuptools
         python3 setup.py bdist_wheel
         sudo py.test -v --force-flaky --junitxml=tr.xml
         mkdir -p target/python-wheels/
