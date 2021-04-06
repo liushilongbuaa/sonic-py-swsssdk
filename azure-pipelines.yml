@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 pool:
-  vmImage: sonicbld
+  vmImage: ubuntu-20.04
 
 trigger:
   branches:
@@ -28,13 +28,14 @@ stages:
       submodules: recursive
       displayName: 'Checkout code'
     - script: |
-        echo Hello
-        # the following is copied from jenkins
-        # set -ex
-        # python2 setup.py bdist_wheel
-        # python3 setup.py bdist_wheel
-        # mkdir -p target/python-wheels/
-        # cp dist/swsssdk-2.0.1-{py2,py3}-none-any.whl target/python-wheels/
-    - publish: $(System.DefaultWorkingDirectory)/target/python-wheels/
-      artifact: sonic-py-swsssdk
-      displayName: "Archive artifacts"
+        set -ex
+        pip3 install setuptools
+        python3 setup.py bdist_wheel
+        mkdir -p target/python-wheels/
+    - publish: $(System.DefaultWorkingDirectory)
+      artifact: swsssdk
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '**/tr.xml'
+        testRunTitle: vstest
+      condition: always()
